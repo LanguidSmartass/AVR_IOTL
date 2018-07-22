@@ -9,7 +9,6 @@
 #define GENERIC_IO_IOREGS_HPP_
 
 #include <cinttypes>
-#include <cstddef>
 
 namespace genericIO {
 
@@ -66,7 +65,7 @@ struct IObit {
 template <class GPIOport, std::size_t n>
 struct GPIOpin {
     using port = GPIOport;
-    constexpr static size_t num = n;
+    constexpr static std::size_t num = n;
 
     static void dirset_out () { port::dirset_out(n); }
 

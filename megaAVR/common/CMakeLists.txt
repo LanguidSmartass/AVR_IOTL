@@ -1,0 +1,19 @@
+add_library(
+        common
+        INTERFACE
+)
+target_sources(
+        common
+        INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/avr_interrupt_raw.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/avr_io_raw.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gpio.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/interrupt.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ioregs.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/isr_class_macro.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/pcint.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/progmem.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/spi.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/timers.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/usarts.hpp
+)

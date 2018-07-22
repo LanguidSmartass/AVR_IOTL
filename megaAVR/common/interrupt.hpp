@@ -9,7 +9,6 @@
 #ifndef MEGAAVR_INTERRUPT_HPP_
 #define MEGAAVR_INTERRUPT_HPP_
 
-#include "avr_raw.hpp"
-#include <avr/interrupt.h>
+#include "avr_interrupt_raw.hpp"
 
 #endif /* MEGAAVR_INTERRUPT_HPP_ */

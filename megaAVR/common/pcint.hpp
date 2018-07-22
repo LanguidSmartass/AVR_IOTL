@@ -47,16 +47,16 @@ struct Pcint {
 
     // % 8 (same as & 7 in this case) is to ensure that if someone uses, say, n as 23 meaning PCINT23 pin,
     // the 23 % 8 would transform to 7, which is a valid pin number
-    static void inp_enable (const size_t n) {
+    static void inp_enable (const std::size_t n) {
         IOport::dirset_inp(n & 7);
         pcmsk::set_bit(n & 7);
     }
 
-    static void inp_disable (const size_t n) { pcmsk::clr_bit(n & 7); }
+    static void inp_disable (const std::size_t n) { pcmsk::clr_bit(n & 7); }
 
-    static bool inp_is_set (const size_t n) { return IOport::inp_is_set(n); }
+    static bool inp_is_set (const std::size_t n) { return IOport::inp_is_set(n); }
 
-    static bool inp_is_clr (const size_t n) { return IOport::inp_is_clr(n); }
+    static bool inp_is_clr (const std::size_t n) { return IOport::inp_is_clr(n); }
 
     static bool flag_is_set () { return PcifrBit::is_set(); }
 

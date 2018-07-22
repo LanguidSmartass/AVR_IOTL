@@ -26,9 +26,9 @@ using PcifrBit0 = megaAVR::PcifrBit<PCIFR, 0>;
 using PcifrBit1 = megaAVR::PcifrBit<PCIFR, 1>;
 using PcifrBit2 = megaAVR::PcifrBit<PCIFR, 2>;
 
-using Pcint0to7   = megaAVR::Pcint<PcicrBit0, PcifrBit0, PCMSK0, gpio::PortB>;
-using Pcint8to15  = megaAVR::Pcint<PcicrBit1, PcifrBit1, PCMSK1, gpio::PortJ>;
-using Pcint16to23 = megaAVR::Pcint<PcicrBit2, PcifrBit2, PCMSK2, gpio::PortK>;
+using Pcint0to7   = megaAVR::Pcint<PcicrBit0, PcifrBit0, PCMSK0, PortB>;
+using Pcint8to15  = megaAVR::Pcint<PcicrBit1, PcifrBit1, PCMSK1, PortJ>;
+using Pcint16to23 = megaAVR::Pcint<PcicrBit2, PcifrBit2, PCMSK2, PortK>;
 
 } // namespace m2560
 

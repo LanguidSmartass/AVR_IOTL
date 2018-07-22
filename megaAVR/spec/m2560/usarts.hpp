@@ -8,66 +8,33 @@
 #ifndef MEGAAVR_M2560_USARTS_HPP_
 #define MEGAAVR_M2560_USARTS_HPP_
 
-#include "megaAVR/common/usarts.hpp"
+#include "../../common/usarts.hpp"
+#include "gpio.hpp"
 
 namespace megaAVR {
 
 namespace m2560 {
 
-using DataBits    = megaAVR::usart_stngs::DataBits    ;
-using Parity      = megaAVR::usart_stngs::Parity      ;
-using StopBits    = megaAVR::usart_stngs::StopBits    ;
-using DoubleSpeed = megaAVR::usart_stngs::DoubleSpeed ;
-using Synchronous = megaAVR::usart_stngs::Synchronous ;
+namespace databits    = megaAVR::usart::databits;
+namespace parity      = megaAVR::usart::parity;
+namespace stopbits    = megaAVR::usart::stopbits;
+namespace doublespeed = megaAVR::usart::doublespeed;
+namespace synchronous = megaAVR::usart::synchronous;
 
-using Usart0_regs = megaAVR::UsartRegisters<UDR0, UCSR0A, UCSR0B, UCSR0C, UBRR0>;
-using Usart1_regs = megaAVR::UsartRegisters<UDR1, UCSR1A, UCSR1B, UCSR1C, UBRR1>;
-using Usart2_regs = megaAVR::UsartRegisters<UDR2, UCSR2A, UCSR2B, UCSR2C, UBRR2>;
-using Usart3_regs = megaAVR::UsartRegisters<UDR3, UCSR3A, UCSR3B, UCSR3C, UBRR3>;
+using Usart0GPIO = megaAVR::usart::GPIO<PortE, PinE0, PinE1, PinE2>;
+using Usart1GPIO = megaAVR::usart::GPIO<PortD, PinD2, PinD3, PinD5>;
+using Usart2GPIO = megaAVR::usart::GPIO<PortH, PinH0, PinH1, PinH2>;
+using Usart3GPIO = megaAVR::usart::GPIO<PortJ, PinJ0, PinJ1, PinJ2>;
 
-template <
-uint32_t    f_cpu    ,
-uint32_t    baud     ,
-DataBits    datab    ,
-Parity      parity   ,
-StopBits    stopb    ,
-DoubleSpeed dsp_en   ,
-Synchronous sync_en
->
-using Usart0 = megaAVR::USART<Usart0_regs, f_cpu, baud, datab, parity, stopb, dsp_en, sync_en>;
+using Usart0CTRL = megaAVR::usart::CTRL<UDR0, UCSR0A, UCSR0B, UCSR0C, UBRR0>;
+using Usart1CTRL = megaAVR::usart::CTRL<UDR1, UCSR1A, UCSR1B, UCSR1C, UBRR1>;
+using Usart2CTRL = megaAVR::usart::CTRL<UDR2, UCSR2A, UCSR2B, UCSR2C, UBRR2>;
+using Usart3CTRL = megaAVR::usart::CTRL<UDR3, UCSR3A, UCSR3B, UCSR3C, UBRR3>;
 
-template <
-uint32_t    f_cpu    ,
-uint32_t    baud     ,
-DataBits    datab    ,
-Parity      parity   ,
-StopBits    stopb    ,
-DoubleSpeed dsp_en   ,
-Synchronous sync_en
->
-using Usart1 = megaAVR::USART<Usart1_regs, f_cpu, baud, datab, parity, stopb, dsp_en, sync_en>;
-
-template <
-uint32_t    f_cpu    ,
-uint32_t    baud     ,
-DataBits    datab    ,
-Parity      parity   ,
-StopBits    stopb    ,
-DoubleSpeed dsp_en   ,
-Synchronous sync_en
->
-using Usart2 = megaAVR::USART<Usart2_regs, f_cpu, baud, datab, parity, stopb, dsp_en, sync_en>;
-
-template <
-uint32_t    f_cpu    ,
-uint32_t    baud     ,
-DataBits    datab    ,
-Parity      parity   ,
-StopBits    stopb    ,
-DoubleSpeed dsp_en   ,
-Synchronous sync_en
->
-using Usart3 = megaAVR::USART<Usart3_regs, f_cpu, baud, datab, parity, stopb, dsp_en, sync_en>;
+using Usart0 = megaAVR::usart::USART<Usart0GPIO, Usart0CTRL>;
+using Usart1 = megaAVR::usart::USART<Usart1GPIO, Usart1CTRL>;
+using Usart2 = megaAVR::usart::USART<Usart2GPIO, Usart2CTRL>;
+using Usart3 = megaAVR::usart::USART<Usart3GPIO, Usart3CTRL>;
 
 } // namespace m2560
 

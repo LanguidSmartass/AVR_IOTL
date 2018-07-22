@@ -1,0 +1,17 @@
+add_library(
+        megaAVR
+        INTERFACE
+)
+target_sources(
+        megaAVR
+        INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/io.hpp
+)
+target_link_libraries(
+        megaAVR
+        INTERFACE
+        m2560
+)
+add_subdirectory(common)
+add_subdirectory(spec)
+add_subdirectory(with_cpp)

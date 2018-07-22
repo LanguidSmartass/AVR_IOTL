@@ -243,7 +243,7 @@
 #endif
 
 namespace megaAVR {
-
+// preprocessor trick on selecting the proper namespace
 using namespace
 
 #if defined (__AVR_ATmega8U2__)

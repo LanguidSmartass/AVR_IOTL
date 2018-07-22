@@ -9,17 +9,19 @@
 #define MEGAAVR_USARTS_HPP_
 
 #include "ioregs.hpp"
-#include "generic/bitops/bitops.hpp"
 #include "interrupt.hpp"
+#include "../../../bitops.hpp" // temporary
 
 namespace megaAVR {
+
+namespace usart {
 
 template <
     std::uintptr_t udr_addr,
     std::uintptr_t ucsra_addr, std::uintptr_t ucsrb_addr,
     std::uintptr_t ucsrc_addr, std::uintptr_t ubrr_addr
 >
-struct UsartRegisters {
+struct CTRL {
     // USART registers
     using udr     = IOreg_8bit<udr_addr>;
     using ucsra   = IOreg_8bit<ucsra_addr>;
@@ -55,55 +57,78 @@ struct UsartRegisters {
     using ucpol   = IObit<ucsrc, 0>;
 };
 
-namespace usart_stngs {
-
-enum class DataBits :
-    std::uint8_t {
-    five = 5, six = 6, seven = 7, eight = 8, nine = 9
-};
-enum class Parity :
-    std::uint8_t {
-    none = 0, odd = 1, even = 2
-};
-enum class StopBits :
-    std::uint8_t {
-    one = 1, two = 2
-};
-enum class DoubleSpeed :
-    bool {
-    disable = 0, enable = 1
-};
-enum class Synchronous :
-    bool {
-    disable = 0, enable = 1
+template <
+    class IOport,
+    class PinRX,
+    class PinTX,
+    class PinXCK
+>
+class GPIO {
+    using port = IOport;
+    using rx   = PinRX;
+    using tx   = PinTX;
+    using xck  = PinXCK;
 };
 
+namespace databits {
+    using type = std::uint8_t;
+    enum databits : type {
+        five = 5, six = 6, seven = 7, eight = 8, nine = 9
+    };
+}
+namespace parity {
+    using type = std::uint8_t;
+    enum parity : type {
+        none = 0, odd = 1, even = 2
+    };
+}
+namespace stopbits {
+    using type = std::uint8_t;
+    enum stopbits : type {
+        one = 1, two = 2
+    };
+}
+namespace doublespeed {
+    using type = bool;
+    enum doublespeed : type {
+        disable = false, enable = true
+    };
+}
+namespace synchronous {
+    using type = bool;
+    enum synchronous : type {
+        disable = false, enable = true
+    };
+}
 
 template <
-    class URegs,
-    std::uint32_t f_cpu,
-    std::uint32_t baud,
-    usart_stngs::DataBits datab,
-    usart_stngs::Parity parity,
-    usart_stngs::StopBits stopb,
-    usart_stngs::DoubleSpeed dsp_en,
-    usart_stngs::Synchronous sync_en
+    class USARTGPIO,
+    class USARTCTRL
 >
 struct USART {
-    using ctrl = URegs;
+    using ctrl = USARTCTRL;
+    using gpio = USARTGPIO;
 
-    static void init () {
+    static void init (
+        std::uint32_t     f_cpu,
+        std::uint32_t     baud,
+        databits::type    datab,
+        parity::type      par,
+        stopbits::type    stopb,
+        doublespeed::type dsp_en,
+        synchronous::type sync_en
+                     ) {
         cli();
         // Clear frame error bit
         ctrl::fe::clr();
         // Calculate baud setting
         std::uint32_t baud_divider = 2;
         /* Set Sync/Async */
-        if (sync_en == usart_stngs::Synchronous::enable) {
+        if (sync_en == synchronous::enable) {
             baud_divider = 2;
             ctrl::u2x::clr();
         } else {
-            if (dsp_en == usart_stngs::DoubleSpeed::enable) {
+            if (dsp_en == doublespeed::enable) {
                 baud_divider = 8;
                 ctrl::u2x::set();
             } else {
@@ -113,7 +138,7 @@ struct USART {
         }
         std::uint16_t baud_setting = static_cast<decltype(baud_setting)>(((f_cpu / baud_divider) / baud) - 1);
         /**< Set Baud Rate */
-        URegs::ubrr::set_val(baud_setting);
+        ctrl::ubrr::set_val(baud_setting);
         /**< Enable Receiver and Transmitter**/
         tx_enable();
         rx_enable();
@@ -123,41 +148,41 @@ struct USART {
         udri_disable();
 
         /**< Set Frame Format */
-        if (datab == usart_stngs::DataBits::five) {
+        if        (datab == databits::five) {
             ctrl::ucsz_2::clr();
             ctrl::ucsz_1::clr();
             ctrl::ucsz_0::clr();
-        } else if (datab == usart_stngs::DataBits::six) {
+        } else if (datab == databits::six) {
             ctrl::ucsz_2::clr();
             ctrl::ucsz_1::clr();
             ctrl::ucsz_0::set();
-        } else if (datab == usart_stngs::DataBits::seven) {
+        } else if (datab == databits::seven) {
             ctrl::ucsz_2::clr();
             ctrl::ucsz_1::set();
             ctrl::ucsz_0::clr();
-        } else if (datab == usart_stngs::DataBits::eight) {
+        } else if (datab == databits::eight) {
             ctrl::ucsz_2::clr();
             ctrl::ucsz_1::set();
             ctrl::ucsz_0::set();
-        } else if (datab == usart_stngs::DataBits::nine) {
+        } else if (datab == databits::nine) {
             ctrl::ucsz_2::set();
             ctrl::ucsz_1::set();
             ctrl::ucsz_0::set();
         }
 
-        if (parity == usart_stngs::Parity::none) {
+        if        (par == parity::none) {
             ctrl::upm_1::clr();
             ctrl::upm_0::clr();
-        } else if (parity == usart_stngs::Parity::even) {
+        } else if (par == parity::even) {
             ctrl::upm_1::set();
             ctrl::upm_0::clr();
-        } else if (parity == usart_stngs::Parity::odd) {
+        } else if (par == parity::odd) {
             ctrl::upm_1::set();
             ctrl::upm_0::set();
         }
 
-        if (stopb == usart_stngs::StopBits::one) { ctrl::usbs::clr(); }
-        else if (stopb == usart_stngs::StopBits::two) { ctrl::usbs::set(); }
+        if      (stopb == stopbits::one) { ctrl::usbs::clr(); }
+        else if (stopb == stopbits::two) { ctrl::usbs::set(); }
 
         sei();
     }
@@ -181,12 +206,12 @@ struct USART {
     }
 
     static void recv_raw (char& dest) {
-        recv_raw(reinterpret_cast<std::uint8_t&>(dest));
+        dest = static_cast<char>(ctrl::udr::get_val());
     }
 
     static void recv_raw (std::uint16_t& dest) {
         std::uint16_t tmp = ctrl::udr::get_val();
-        if (ctrl::rxb8::is_set()) { bitops::set_bitp<std::uint16_t>(tmp, 9); }
+        if (ctrl::rxb8::is_set()) { bitops::set_pos<std::uint16_t>(tmp, 9); }
         dest = tmp;
     }
 
@@ -269,11 +294,11 @@ struct USART {
         while (ctrl::udre::is_clr()) {}
     }
 
-private:
-    USART ();
-
-    ~USART ();
+     USART() = delete;
+    ~USART() = delete;
 };
+
+}
 
 } // namespace megaAVR
 

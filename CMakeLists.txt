@@ -1,0 +1,15 @@
+add_library(
+        avr_io
+        INTERFACE
+)
+target_sources(
+        avr_io
+        INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/ioregs.hpp
+)
+target_link_libraries(
+        avr_io
+        INTERFACE
+        megaAVR
+)
+add_subdirectory(megaAVR)

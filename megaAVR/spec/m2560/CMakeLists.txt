@@ -1,0 +1,20 @@
+add_library(
+        m2560
+        INTERFACE
+)
+target_sources(
+        m2560
+        INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/gpio.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/io.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/pcint.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/spi.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/timers.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/usarts.hpp
+)
+target_link_libraries(
+        m2560
+        INTERFACE
+        common
+        with_cpp
+)

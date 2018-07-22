@@ -9,15 +9,19 @@
 #define MEGAAVR_M2560_GPIO_HPP_
 
 #include "../../common/gpio.hpp"
+#include "../../with_cpp/header.hpp"
 
 namespace megaAVR {
 
 namespace m2560 {
 
+inline void gpiofunc() {
+    headerfunc();
+}
 //template <intptr_t PortRegAddr, intptr_t PinRegAddr, intptr_t DataDirRegAddr>
 //using GPIOport = megaAVR::GPIOport<PortRegAddr, PinRegAddr, DataDirRegAddr>;
 
-template <class GPIOport, size_t n>
+template <class GPIOport, std::size_t n>
 using GPIOpin  = genericIO::GPIOpin<GPIOport, n>;
 
 using PortA = GPIOport<PORTA, PINA, DDRA>;
@@ -28,7 +32,7 @@ using PortE = GPIOport<PORTE, PINE, DDRE>;
 using PortF = GPIOport<PORTF, PINF, DDRF>;
 using PortG = GPIOport<PORTG, PING, DDRG>;
 using PortH = GPIOport<PORTH, PINH, DDRH>;
-// No 'I' port
+// No 'I' gpio
 using PortJ = GPIOport<PORTJ, PINJ, DDRJ>;
 using PortK = GPIOport<PORTK, PINK, DDRK>;
 using PortL = GPIOport<PORTL, PINL, DDRL>;
